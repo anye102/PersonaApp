@@ -113,13 +113,13 @@ class UserManager: ObservableObject {
     }
     
     // 切换用户
-    func switchUser(to user: User) {
+    func switchUser(to user: User, rememberMe: Bool) {
         currentUser = user
         saveCurrentUser()
         
         // 如果启用了自动登录，更新上次登录用户
-        if isAutoLoginEnabled {
-            userDefaults.set(user.id.uuidString, forKey: lastLoginUserIdKey)
+        if rememberMe {
+            enableAutoLogin(userId: user.id)
         }
     }
     
@@ -181,6 +181,7 @@ class UserManager: ObservableObject {
     // 退出登录
     func logout() {
         currentUser = nil
+        userDefaults.set(false, forKey: autoLoginKey)
         userDefaults.removeObject(forKey: currentUserIdKey)
     }
     
@@ -218,6 +219,7 @@ class UserManager: ObservableObject {
     
     // 启用自动登录
     private func enableAutoLogin(userId: UUID) {
+        userDefaults.set(true, forKey: autoLoginKey)
         userDefaults.set(userId.uuidString, forKey: lastLoginUserIdKey)
     }
     

@@ -14,6 +14,7 @@ struct UserSelectionView: View {
     @State private var showingLoginView = false
     @State private var selectedUser: User?
     @State private var showingMainContent = false
+    @State private var rememberMe = false
     
     var body: some View {
         NavigationStack {
@@ -79,6 +80,15 @@ struct UserSelectionView: View {
                                 }
                                 .padding(.horizontal)
                             }
+                            
+                            // 自动登录按钮
+                            HStack {
+                                Toggle("记住我", isOn: $rememberMe)
+                                    .toggleStyle(SwitchToggleStyle(tint: .white))
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
+                            .padding(.horizontal)
                             
                             // 登录按钮
                             Button(action: loginSelectedUser) {
@@ -149,7 +159,7 @@ struct UserSelectionView: View {
             return
         }
         
-        userManager.switchUser(to: user)
+        userManager.switchUser(to: user, rememberMe: rememberMe)
         
         showingMainContent = true
     }
