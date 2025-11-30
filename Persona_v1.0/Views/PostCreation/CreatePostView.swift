@@ -11,8 +11,8 @@ import PhotosUI
 struct CreatePostView: View {
     @State private var content = ""
     @State private var postRequirement = ""
-    @State private var selectedImages: [PhotosPickerItem] = []
-    @State private var postImages: [UIImage] = []
+//    @State private var selectedImages: [PhotosPickerItem] = []
+//    @State private var postImages: [UIImage] = []
     @State private var isGenerating = false
     
     @Environment(\.dismiss) var dismiss
@@ -58,9 +58,9 @@ struct CreatePostView: View {
                 contentInputView
                     .disabled(selectedPersonaId == nil)
                 
-                // 图片选择
-                imageSelectionView
-                    .disabled(selectedPersonaId == nil)
+//                // 图片选择
+//                imageSelectionView
+//                    .disabled(selectedPersonaId == nil)
                 
                 Spacer()
             }
@@ -80,9 +80,9 @@ struct CreatePostView: View {
                     .disabled(content.isEmpty || selectedPersonaId == nil || isGenerating)
                 }
             }
-            .onChange(of: selectedImages) { oldImages, newImages in
-                loadImages()
-            }
+//            .onChange(of: selectedImages) { oldImages, newImages in
+//                loadImages()
+//            }
             .sheet(isPresented: $showingCreatePersona) {
                 PersonaCreationView()
                     .environmentObject(personaManager)
@@ -183,79 +183,77 @@ struct CreatePostView: View {
         }
     }
     
-    // 图片选择子视图
-    private var imageSelectionView: some View {
-        VStack(spacing: 16) {
-            // 图片预览
-            if !postImages.isEmpty {
-                ScrollView(.horizontal) {
-                    HStack(spacing: 10) {
-                        ForEach(postImages, id: \.self) { image in
-                            imagePreviewCell(image: image)
-                        }
-                    }
-                }
-                .padding(.horizontal)
-            }
-            
-            // 添加图片按钮
-            PhotosPicker(selection: $selectedImages, maxSelectionCount: 3, matching: .images) {
-                Label("添加图片", systemImage: "photo.badge.plus")
-            }
-            .buttonStyle(.bordered)
-            .padding()
-        }
-    }
+//    // 图片选择子视图
+//    private var imageSelectionView: some View {
+//        VStack(spacing: 16) {
+//            // 图片预览
+//            if !postImages.isEmpty {
+//                ScrollView(.horizontal) {
+//                    HStack(spacing: 10) {
+//                        ForEach(postImages, id: \.self) { image in
+//                            imagePreviewCell(image: image)
+//                        }
+//                    }
+//                }
+//                .padding(.horizontal)
+//            }
+//            
+//            // 添加图片按钮
+//            PhotosPicker(selection: $selectedImages, maxSelectionCount: 3, matching: .images) {
+//                Label("添加图片", systemImage: "photo.badge.plus")
+//            }
+//            .buttonStyle(.bordered)
+//            .padding()
+//        }
+//    }
     
-    private func imagePreviewCell(image: UIImage) -> some View {
-        Image(uiImage: image)
-            .resizable()
-            .scaledToFill()
-            .frame(width: 100, height: 100)
-            .cornerRadius(8)
-            .overlay(
-                Button(action: {
-                    removeImage(image)
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.red)
-                        .background(Color.white)
-                        .cornerRadius(10)
-                }
-                .padding(5),
-                alignment: .topTrailing
-            )
-    }
-
-    private func loadImages() {
-        Task {
-            postImages.removeAll()
-            
-            for item in selectedImages {
-                if let data = try? await item.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data) {
-                    postImages.append(image)
-                }
-            }
-        }
-    }
-    
-    private func removeImage(_ image: UIImage) {
-        if let index = postImages.firstIndex(where: { $0.pngData() == image.pngData() }) {
-            postImages.remove(at: index)
-            // 也需要更新selectedImages，但由于PhotosPickerItem不支持直接比较，这里简化处理
-            selectedImages.remove(at: min(index, selectedImages.count - 1))
-        }
-    }
-    
+//    private func imagePreviewCell(image: UIImage) -> some View {
+//        Image(uiImage: image)
+//            .resizable()
+//            .scaledToFill()
+//            .frame(width: 100, height: 100)
+//            .cornerRadius(8)
+//            .overlay(
+//                Button(action: {
+//                    removeImage(image)
+//                }) {
+//                    Image(systemName: "xmark.circle.fill")
+//                        .foregroundColor(.red)
+//                        .background(Color.white)
+//                        .cornerRadius(10)
+//                }
+//                .padding(5),
+//                alignment: .topTrailing
+//            )
+//    }
+//
+//    private func loadImages() {
+//        Task {
+//            postImages.removeAll()
+//            
+//            for item in selectedImages {
+//                if let data = try? await item.loadTransferable(type: Data.self),
+//                   let image = UIImage(data: data) {
+//                    postImages.append(image)
+//                }
+//            }
+//        }
+//    }
+//    
+//    private func removeImage(_ image: UIImage) {
+//        if let index = postImages.firstIndex(where: { $0.pngData() == image.pngData() }) {
+//            postImages.remove(at: index)
+//            // 也需要更新selectedImages，但由于PhotosPickerItem不支持直接比较，这里简化处理
+//            selectedImages.remove(at: min(index, selectedImages.count - 1))
+//        }
+//    }
+//    
     private func publishPost() {
         guard let selectedPersonaId = selectedPersonaId,
               let persona = personaManager.getPersonaById(for: selectedPersonaId) else {
             return
         }
         
-        // 在实际应用中，这里会上传图片并获取URL
-        // 这里简化处理，使用nil
         personaManager.createPost(persona: persona, content: content)
         
         dismiss()

@@ -30,7 +30,7 @@ struct PersonaCreationView: View {
     @EnvironmentObject var personaManager: PersonaManager
     
     // 步骤管理
-    @State private var currentStep = 3
+    @State private var currentStep = 1
     
     var body: some View {
         NavigationStack {

@@ -94,7 +94,7 @@ class AIService: ObservableObject {
         
         // 处理请求
         processAIRequestInternal(personaId: persona.id, persona: persona, messages: messages, isGenerateContent: isGenerateContent, onTokenReceived: onTokenReceived) { [weak self] result in
-            guard let self = self else { return }
+            guard self != nil else { return }
             
 //            // 恢复原始配置
 //            self.config.selectedProvider = originalProvider
