@@ -30,7 +30,7 @@ struct PersonaCreationView: View {
     @EnvironmentObject var personaManager: PersonaManager
     
     // 步骤管理
-    @State private var currentStep = 1
+    @State private var currentStep = 2
     
     var body: some View {
         NavigationStack {
@@ -104,14 +104,21 @@ struct PersonaCreationView: View {
             return
         }
         
+        // 获取当前用户id
+        guard let currentUserId = UserManager.shared.currentUser?.id else {
+            errorMessage = "无法获取用户信息，请重新登录"
+            return
+        }
+        
         // 创建新Persona
         let newPersona = Persona(
             name: name,
             avatar: selectedAssetImageName ?? "",
             personality: personality,
-            backstory: backstory
+            backstory: backstory,
+            userId: currentUserId
         )
-        newPersona.isFollowed = true
+//        newPersona.isFollowed = false
         
         // 显示加载状态
         isCreating = true

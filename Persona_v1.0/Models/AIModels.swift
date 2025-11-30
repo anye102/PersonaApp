@@ -18,7 +18,10 @@ struct ProviderConfig: Codable {
         case .mock:
             return ProviderConfig(apiKey: "", model: "mock-model")
         case .coze:
-            return ProviderConfig(apiKey: "", model: "coze-default")
+            return ProviderConfig(
+                apiKey: "pat_TWi1IxFBe5YzkLobzVz9l6BE7zQCWhTVIeXUfhdq1GEFRLlt342Z8QTe88C8UuNo",
+                model: "7577019283109101620"
+            )
         }
     }
 }

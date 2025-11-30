@@ -64,7 +64,7 @@ struct MyPersonasView: View {
                 }
                 
                 Section("推荐关注") {
-                    let recommendedPersonas = personaManager.getPersonas().filter { !$0.isFollowed && !personaManager.getUserPersonas().contains(where: { $0.id == $0.id }) }
+                    let recommendedPersonas = personaManager.getPersonas().filter { !$0.isFollowedByCurrentUser() && !personaManager.getUserPersonas().contains(where: { $0.id == $0.id }) }
                     
                     if recommendedPersonas.isEmpty {
                         Text("暂无推荐Persona")

@@ -56,19 +56,29 @@ struct PostRowView: View {
 
                 Spacer()
                 
-                // 关注键
-                Button(action: {
-                    personaManager.followPersona(post.personaId)
-                }) {
-                    Text(personaManager.getPersonaById(for: post.personaId)?.isFollowed ?? false ? "已关注" : "关注")
+                if personaManager.isUserPersona(post.personaId){
+                    Text("自创")
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(personaManager.getPersonaById(for: post.personaId)?.isFollowed ?? false ? Color.gray : Color.blue)
+                        .background(Color.gray)
                         .foregroundColor(.white)
                         .cornerRadius(12)
+                } else {
+                    // 关注键
+                    Button(action: {
+                        personaManager.followPersona(post.personaId)
+                    }) {
+                        Text(personaManager.getPersonaById(for: post.personaId)?.isFollowedByCurrentUser() ?? false ? "已关注" : "关注")
+                            .font(.caption)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(personaManager.getPersonaById(for: post.personaId)?.isFollowedByCurrentUser() ?? false ? Color.gray : Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
-                .buttonStyle(PlainButtonStyle())
             }
             
             // 动态内容
@@ -80,13 +90,12 @@ struct PostRowView: View {
                 // 点赞按钮
                 Button(action: {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                        post.isLiked.toggle()
-                        post.likeCount += post.isLiked ? 1 : -1
+                        post.toggleLike()
                     }
                 }) {
                     HStack {
-                        Image(systemName: post.isLiked ? "heart.fill" : "heart")
-                            .foregroundColor(post.isLiked ? .blue : .gray)
+                        Image(systemName: post.isLikedByCurrentUser() ? "heart.fill" : "heart")
+                            .foregroundColor(post.isLikedByCurrentUser() ? .blue : .gray)
                         Text("\(post.likeCount)")
                     }
                     .frame(width: 60, alignment: .leading)
@@ -97,13 +106,12 @@ struct PostRowView: View {
                 // 收藏按钮
                 Button(action: {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                        post.isMarked.toggle()
-                        post.markCount += post.isMarked ? 1 : -1
+                        post.toggleMark()
                     }
                 }) {
                     HStack {
-                        Image(systemName: post.isMarked ? "bookmark.fill" : "bookmark")
-                            .foregroundColor(post.isMarked ? .black : .gray)
+                        Image(systemName: post.isMarkedByCurrentUser() ? "bookmark.fill" : "bookmark")
+                            .foregroundColor(post.isMarkedByCurrentUser() ? .black : .gray)
                         Text("\(post.markCount)")
                     }
                     .frame(width: 60, alignment: .leading)

@@ -21,56 +21,65 @@ struct Step2View: View {
                 .font(.title)
                 .fontWeight(.bold)
             
-            TextEditor(text: $backgroundStory)
-                .textFieldStyle(.roundedBorder)
-                .padding()
-                .frame(height: 150)
-                .border(Color.gray.opacity(0.3))
-                .placeholder(when: backgroundStory.isEmpty) {
-                    Text("输入Persona的背景故事...")
+            ZStack(alignment: .topLeading) {
+                // 占位符（仅当为空时显示）
+                if backgroundStory.isEmpty {
+                    Text("输入Persona的背景故事与兴趣...")
+//                        .font(.subheadline)
                         .foregroundColor(.gray)
-                        .padding(8)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 16)
+                        .allowsHitTesting(false) // 允许点击穿透
                 }
-            
-            VStack(spacing: 10) {
-                HStack {
-                    TextField("添加兴趣", text: $newInterest)
-                        .textFieldStyle(.roundedBorder)
-                    
-                    Button(action: addInterest) {
-                        Text("添加")
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .disabled(newInterest.isEmpty)
-                }
-                
-                if !interests.isEmpty {
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 10) {
-                            ForEach(interests, id: \.self) { interest in
-                                HStack {
-                                    Text(interest)
-                                        .padding(8)
-                                        .background(Color.gray.opacity(0.2))
-                                        .cornerRadius(20)
-                                    
-                                    Button(action: {
-                                        removeInterest(interest)
-                                    }) {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .foregroundColor(.gray)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
+
+                // 多行文本编辑器
+                TextEditor(text: $backgroundStory)
+                    .padding(8)
+                    .frame(height: 200)
+                    .border(Color.gray.opacity(0.3))
+                    .background(Color.clear)
+                    .scrollContentBackground(.hidden)
             }
-            .padding()
+            
+//            VStack(spacing: 10) {
+//                HStack {
+//                    TextField("添加兴趣", text: $newInterest)
+//                        .textFieldStyle(.roundedBorder)
+//                    
+//                    Button(action: addInterest) {
+//                        Text("添加")
+//                            .padding()
+//                            .background(Color.blue)
+//                            .foregroundColor(.white)
+//                            .cornerRadius(10)
+//                    }
+//                    .disabled(newInterest.isEmpty)
+//                }
+//                
+//                if !interests.isEmpty {
+//                    ScrollView(.horizontal) {
+//                        HStack(spacing: 10) {
+//                            ForEach(interests, id: \.self) { interest in
+//                                HStack {
+//                                    Text(interest)
+//                                        .padding(8)
+//                                        .background(Color.gray.opacity(0.2))
+//                                        .cornerRadius(20)
+//                                    
+//                                    Button(action: {
+//                                        removeInterest(interest)
+//                                    }) {
+//                                        Image(systemName: "xmark.circle.fill")
+//                                            .foregroundColor(.gray)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        .padding(.vertical, 5)
+//                    }
+//                }
+//            }
+//            .padding()
             
             Spacer()
             
@@ -97,19 +106,19 @@ struct Step2View: View {
         }
     }
     
-    private func addInterest() {
-        guard !newInterest.isEmpty else { return }
-        
-        if !interests.contains(newInterest) {
-            interests.append(newInterest)
-        }
-        
-        newInterest = ""
-    }
-    
-    private func removeInterest(_ interest: String) {
-        interests.removeAll { $0 == interest }
-    }
+//    private func addInterest() {
+//        guard !newInterest.isEmpty else { return }
+//        
+//        if !interests.contains(newInterest) {
+//            interests.append(newInterest)
+//        }
+//        
+//        newInterest = ""
+//    }
+//    
+//    private func removeInterest(_ interest: String) {
+//        interests.removeAll { $0 == interest }
+//    }
 }
 
 // 占位符扩展

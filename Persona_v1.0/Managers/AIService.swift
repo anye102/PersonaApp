@@ -60,8 +60,8 @@ class AIService: ObservableObject {
         let messages = [
             Message(
                 id: UUID(),
-                senderId: UUID(),
-                senderName: "zk",
+                senderId: UserManager.shared.currentUser?.id ?? UUID(),
+                senderName: UserManager.shared.currentUser?.username ?? "unknown",
                 content: prompt,
                 isFromUser: true,
                 timestamp: Date()
@@ -82,15 +82,6 @@ class AIService: ObservableObject {
     
     // 处理AI请求的公共方法
     private func processAIRequest(persona: Persona, messages: [Message], isGenerateContent: Bool = false, onTokenReceived: ((String) -> Void)? = nil, completion: @escaping (Result<String, Error>) -> Void) {
-//        // 检查Persona是否为用户创建的
-//        let isUserCreated = PersonaManager.shared.isUserPersona(persona.id)
-//        
-//        // 如果是用户创建的Persona，使用配置的AI模型
-//        // 如果不是，使用mock
-//        let originalProvider = config.selectedProvider
-//        if !isUserCreated {
-//            config.selectedProvider = .mock
-//        }
         
         // 处理请求
         processAIRequestInternal(personaId: persona.id, persona: persona, messages: messages, isGenerateContent: isGenerateContent, onTokenReceived: onTokenReceived) { [weak self] result in

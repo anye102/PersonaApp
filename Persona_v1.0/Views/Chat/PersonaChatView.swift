@@ -100,8 +100,8 @@ struct PersonaChatView: View {
             // 添加用户消息
             let userMessage = Message(
                 id: UUID(),
-                senderId: UUID(),
-                senderName: "zk",
+                senderId: UserManager.shared.currentUser?.id ?? UUID(),
+                senderName: UserManager.shared.currentUser?.username ?? "unknown",
                 content: messageText,
                 isFromUser: true,
                 timestamp: Date()

@@ -36,12 +36,12 @@ struct PersonaDetailView: View {
                             Button(action: {
                                 personaManager.followPersona(persona.id)
                             }) {
-                                Text(persona.isFollowed ? "已关注" : "关注")
+                                Text(persona.isFollowedByCurrentUser() ? "已关注" : "关注")
                                     .font(.subheadline)
-                                    .foregroundColor(persona.isFollowed ? .secondary : .white)
+                                    .foregroundColor(persona.isFollowedByCurrentUser() ? .secondary : .white)
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 8)
-                                    .background(persona.isFollowed ? Color(.systemGray5) : Color.blue)
+                                    .background(persona.isFollowedByCurrentUser() ? Color(.systemGray5) : Color.blue)
                                     .cornerRadius(8)
                             }
                         } else {
@@ -139,7 +139,7 @@ struct PersonaDetailView: View {
         personaManager.posts.removeAll { $0.personaId == persona.id }
         
         // 删除与该Persona相关的聊天记录
-        personaManager.chatHistory.removeValue(forKey: persona.id)
+//        personaManager.chatHistory.removeValue(forKey: persona.id)
         
         // 保存聊天记录到本地存储
         personaManager.saveChatHistoryToLocalStorage()
