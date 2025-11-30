@@ -78,8 +78,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "476"
-            endingLineNumber = "476"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
             landmarkName = "generateMockResponse(persona:messages:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,9 +238,9 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
-            landmarkName = "createURLRequest(personaId:request:isStreaming:)"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
+            landmarkName = "createURLRequest(personaId:request:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -254,8 +254,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "353"
-            endingLineNumber = "353"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "parseStreamResponse(personaId:data:onTokenReceived:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -270,8 +270,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "369"
-            endingLineNumber = "369"
+            startingLineNumber = "335"
+            endingLineNumber = "335"
             landmarkName = "parseStreamResponse(personaId:data:onTokenReceived:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -286,8 +286,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "383"
-            endingLineNumber = "383"
+            startingLineNumber = "349"
+            endingLineNumber = "349"
             landmarkName = "parseStreamResponse(personaId:data:onTokenReceived:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -302,8 +302,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "370"
-            endingLineNumber = "370"
+            startingLineNumber = "336"
+            endingLineNumber = "336"
             landmarkName = "parseStreamResponse(personaId:data:onTokenReceived:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -318,8 +318,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
+            startingLineNumber = "364"
+            endingLineNumber = "364"
             landmarkName = "parseStreamResponse(personaId:data:onTokenReceived:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -334,8 +334,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "374"
-            endingLineNumber = "374"
+            startingLineNumber = "340"
+            endingLineNumber = "340"
             landmarkName = "parseStreamResponse(personaId:data:onTokenReceived:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -350,8 +350,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "373"
-            endingLineNumber = "373"
+            startingLineNumber = "339"
+            endingLineNumber = "339"
             landmarkName = "parseStreamResponse(personaId:data:onTokenReceived:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -414,8 +414,8 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "199"
-            endingLineNumber = "199"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
             landmarkName = "sendStreamRequest(personaId:request:onTokenReceived:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,9 +542,9 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "274"
-            endingLineNumber = "274"
-            landmarkName = "createURLRequest(personaId:request:isStreaming:)"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
+            landmarkName = "createURLRequest(personaId:request:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -574,25 +574,9 @@
             filePath = "Persona_v1.0/Managers/AIService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "processAIRequest(persona:messages:isStreaming:onTokenReceived:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "38A61F8D-B71C-405F-82DA-0B8F5F2BE0A2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Persona_v1.0/Managers/AIService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
-            landmarkName = "sendRequest(personaId:request:completion:)"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "processAIRequest(persona:messages:isGenerateContent:onTokenReceived:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

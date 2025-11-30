@@ -26,7 +26,7 @@ class AIService: ObservableObject {
         config.save()
     }
     
-    // 生成AI回复（非流式）
+    // 生成AI回复（不需要流式展示）
     func generateResponse(persona: Persona, messages: [Message], completion: @escaping (Result<String, Error>) -> Void) {
         processAIRequest(persona: persona, messages: messages) { [weak self] result in
             guard self != nil else { return }
@@ -42,7 +42,33 @@ class AIService: ObservableObject {
     
     // 生成AI回复（流式）
     func generateStreamResponse(persona: Persona, messages: [Message], onTokenReceived: @escaping (String) -> Void, completion: @escaping (Result<String, Error>) -> Void) {
-        processAIRequest(persona: persona, messages: messages, isStreaming: true, onTokenReceived: onTokenReceived) { [weak self] result in
+        processAIRequest(persona: persona, messages: messages, onTokenReceived: onTokenReceived) { [weak self] result in
+            guard self != nil else { return }
+            
+            switch result {
+            case .success(let response):
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // 生成内容（用于动态发布等）
+    func generateContent(persona: Persona, prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
+        // 构建消息
+        let messages = [
+            Message(
+                id: UUID(),
+                senderId: UUID(),
+                senderName: "zk",
+                content: prompt,
+                isFromUser: true,
+                timestamp: Date()
+            )
+        ]
+        
+        processAIRequest(persona: persona, messages: messages, isGenerateContent: true) { [weak self] result in
             guard self != nil else { return }
             
             switch result {
@@ -55,35 +81,37 @@ class AIService: ObservableObject {
     }
     
     // 处理AI请求的公共方法
-    private func processAIRequest(persona: Persona, messages: [Message], isStreaming: Bool = false, onTokenReceived: ((String) -> Void)? = nil, completion: @escaping (Result<String, Error>) -> Void) {
-        // 检查Persona是否为用户创建的
-        let isUserCreated = PersonaManager.shared.isUserPersona(persona.id)
-        
-        // 如果是用户创建的Persona，使用配置的AI模型
-        // 如果不是，使用mock
-        let originalProvider = config.selectedProvider
-        if !isUserCreated {
-            config.selectedProvider = .mock
-        }
+    private func processAIRequest(persona: Persona, messages: [Message], isGenerateContent: Bool = false, onTokenReceived: ((String) -> Void)? = nil, completion: @escaping (Result<String, Error>) -> Void) {
+//        // 检查Persona是否为用户创建的
+//        let isUserCreated = PersonaManager.shared.isUserPersona(persona.id)
+//        
+//        // 如果是用户创建的Persona，使用配置的AI模型
+//        // 如果不是，使用mock
+//        let originalProvider = config.selectedProvider
+//        if !isUserCreated {
+//            config.selectedProvider = .mock
+//        }
         
         // 处理请求
-        processAIRequestInternal(personaId: persona.id, persona: persona, messages: messages, isStreaming: isStreaming, onTokenReceived: onTokenReceived) { [weak self] result in
+        processAIRequestInternal(personaId: persona.id, persona: persona, messages: messages, isGenerateContent: isGenerateContent, onTokenReceived: onTokenReceived) { [weak self] result in
             guard let self = self else { return }
             
-            // 恢复原始配置
-            self.config.selectedProvider = originalProvider
+//            // 恢复原始配置
+//            self.config.selectedProvider = originalProvider
             
             completion(result)
         }
     }
     
     // 处理AI请求的内部方法
-    private func processAIRequestInternal(personaId: UUID, persona: Persona, messages: [Message], isStreaming: Bool = false, onTokenReceived: ((String) -> Void)? = nil, completion: @escaping (Result<String, Error>) -> Void) {
+    private func processAIRequestInternal(personaId: UUID, persona: Persona, messages: [Message], isGenerateContent: Bool = false, onTokenReceived: ((String) -> Void)? = nil, completion: @escaping (Result<String, Error>) -> Void) {
         // 如果是模拟AI，直接返回模拟回复
         if config.selectedProvider == .mock {
             if let onTokenReceived = onTokenReceived {
                 DispatchQueue.global().async {
-                    let response = self.generateMockResponse(persona: persona, messages: messages)
+                    let response = isGenerateContent ?
+                        self.generateMockContent(persona: persona, prompt: messages.last?.content ?? ""):
+                        self.generateMockResponse(persona: persona, messages: messages)
                     var accumulatedText = ""
                     
                     for character in response {
@@ -100,7 +128,10 @@ class AIService: ObservableObject {
                 }
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 1...3)) {
-                    let response = self.generateMockResponse(persona: persona, messages: messages)
+                    let response = isGenerateContent ?
+                        self.generateMockContent(persona: persona, prompt: messages.last?.content ?? ""):
+                        self.generateMockResponse(persona: persona, messages: messages)
+                    
                     completion(.success(response))
                 }
             }
@@ -121,12 +152,6 @@ class AIService: ObservableObject {
         // 创建请求
         let request = AIChatRequest(model: config.model, messages: aiMessages)
         
-        // 发送流式请求
-//        if let onTokenReceived = onTokenReceived {
-//            sendStreamRequest(personaId: persona.id, request: request, onTokenReceived: onTokenReceived, completion: completion)
-//        } else {
-//            sendRequest(personaId: personaId, request: request, completion: completion)
-//        }
         sendStreamRequest(personaId: persona.id, request: request, onTokenReceived: onTokenReceived, completion: completion)
     }
     
@@ -154,38 +179,10 @@ class AIService: ObservableObject {
     }
     
     // 发送请求
-    private func sendRequest(personaId: UUID, request: AIChatRequest, completion: @escaping (Result<String, Error>) -> Void) {
-        // 创建URLRequest
-        do {
-            let urlRequest = try createURLRequest(personaId: personaId, request: request, isStreaming: false)
-            
-            // 发送请求
-            URLSession.shared.dataTask(with: urlRequest) { data, response, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        completion(.failure(error))
-                        return
-                    }
-                    
-                    guard let data = data else {
-                        completion(.failure(NSError(domain: "AIService", code: -3, userInfo: [NSLocalizedDescriptionKey: "没有收到数据"])))
-                        return
-                    }
-                    
-                    // 解析响应
-                    self.parseResponse(personaId: personaId, data: data, completion: completion)
-                }
-            }.resume()
-        } catch {
-            completion(.failure(error))
-        }
-    }
-    
-    // 发送流式请求
     private func sendStreamRequest(personaId: UUID, request: AIChatRequest, onTokenReceived: ((String) -> Void)? = nil, completion: @escaping (Result<String, Error>) -> Void) {
         
         do {
-            let urlRequest = try createURLRequest(personaId: personaId, request: request, isStreaming: true)
+            let urlRequest = try createURLRequest(personaId: personaId, request: request)
             
             // 使用URLSession的dataTaskPublisher处理流式响应
             URLSession.shared.dataTaskPublisher(for: urlRequest)
@@ -232,7 +229,7 @@ class AIService: ObservableObject {
     }
     
     // 创建URLRequest的公共方法
-    private func createURLRequest(personaId: UUID, request: AIChatRequest, isStreaming: Bool) throws -> URLRequest {
+    private func createURLRequest(personaId: UUID, request: AIChatRequest) throws -> URLRequest {
         guard let url = URL(string: config.selectedProvider.baseURL) else {
             throw NSError(domain: "AIService", code: -2, userInfo: [NSLocalizedDescriptionKey: "无效的API URL"])
         }
@@ -312,37 +309,6 @@ class AIService: ObservableObject {
         }
         
         return urlRequest
-    }
-    
-    // 解析响应的公共方法
-    private func parseResponse(personaId: UUID, data: Data, completion: @escaping (Result<String, Error>) -> Void) {
-        // 解析响应
-        do {
-            var responseText = ""
-            
-            switch self.config.selectedProvider {
-            case .mock:
-                break
-            case .coze:
-                // 解析Coze API响应
-                let cozeResponse = try JSONDecoder().decode(CozeResponse.self, from: data)
-                responseText = cozeResponse.data.content
-                
-                // 保存会话ID
-                PersonaManager.shared.saveConversationId(for: personaId, conversationId: cozeResponse.data.conversation_id)
-            }
-            
-            completion(.success(responseText))
-        } catch {
-            // 尝试解析错误信息
-            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-               let errorMessage = json["error"] as? [String: Any],
-               let message = errorMessage["message"] as? String {
-                completion(.failure(NSError(domain: "AIService", code: -5, userInfo: [NSLocalizedDescriptionKey: message])))
-            } else {
-                completion(.failure(error))
-            }
-        }
     }
     
     // 解析流式响应
@@ -430,33 +396,6 @@ class AIService: ObservableObject {
         }
         
         return nil
-    }
-    
-    // 生成内容（用于动态发布等）
-    func generateContent(persona: Persona, prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
-        
-        // 构建消息
-        let messages = [
-            Message(
-                id: UUID(),
-                senderId: UUID(),
-                senderName: "zk",
-                content: prompt,
-                isFromUser: true,
-                timestamp: Date()
-            )
-        ]
-        
-        processAIRequest(persona: persona, messages: messages, isStreaming: true) { [weak self] result in
-            guard self != nil else { return }
-            
-            switch result {
-            case .success(let response):
-                completion(.success(response))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
     }
     
     // 生成模拟回复

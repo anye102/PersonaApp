@@ -130,8 +130,8 @@ struct PersonaChatView: View {
                         // 检查是否是当前流式消息
                         if self.streamingMessageId == streamingId {
                             
-                            let isUserPersona = self.personaManager.isUserPersona(self.persona.id)
-                            if isUserPersona {
+                            let selectedProvider = self.aiService.config.selectedProvider
+                            if selectedProvider != .mock {
                                 self.streamingContent += token
                             } else {
                                 self.streamingContent = token
