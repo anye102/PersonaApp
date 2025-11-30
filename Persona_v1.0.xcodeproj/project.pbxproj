@@ -20,11 +20,6 @@
 			path = Persona_v1.0;
 			sourceTree = "<group>";
 		};
-		D6FF7F762ED0953000DEDA02 /* res */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = res;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +37,6 @@
 		D6FF7EFD2ECF24BE00DEDA02 = {
 			isa = PBXGroup;
 			children = (
-				D6FF7F762ED0953000DEDA02 /* res */,
 				D6FF7F082ECF24BE00DEDA02 /* Persona_v1.0 */,
 				D6FF7F072ECF24BE00DEDA02 /* Products */,
 			);
@@ -73,7 +67,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D6FF7F082ECF24BE00DEDA02 /* Persona_v1.0 */,
-				D6FF7F762ED0953000DEDA02 /* res */,
 			);
 			name = Persona_v1.0;
 			packageProductDependencies = (

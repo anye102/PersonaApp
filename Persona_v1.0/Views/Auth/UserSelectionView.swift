@@ -55,13 +55,13 @@ struct UserSelectionView: View {
                                                 userManager.getAvatarImage(for: user)
                                                     .resizable()
                                                     .scaledToFill()
-                                                    .frame(width: 50, height: 50)
-                                                    .cornerRadius(25)
+                                                    .frame(width: 35, height: 35)
+                                                    .cornerRadius(20)
                                                     .clipped()
-                                                    .font(.system(size: 50))
+                                                    .font(.system(size: 35))
                                                     .foregroundColor(.white)
                                                 Text(user.username)
-                                                    .font(.system(size: 30))
+                                                    .font(.system(size: 20))
                                                     .foregroundColor(.white)
                                                 
                                                 Spacer()
@@ -74,7 +74,8 @@ struct UserSelectionView: View {
                                             }
                                             .padding()
                                             .background(Color.white.opacity(0.1))
-                                            .cornerRadius(15)
+                                            .frame(height: 50)
+                                            .cornerRadius(20)
                                         }
                                     }
                                 }
